@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package ingester;
+
+import "google/protobuf/timestamp.proto";
+
+service PostIngestService {
+  rpc IngestPost(PostRequest) returns (IngestResponse);
+}
+
+message PostRequest {
+  Post post = 1;
+}
+
+message Post {
+  int64 chat_id = 1;
+  uint32 message_id = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  google.protobuf.Timestamp post_timestamp = 4;
+  string text = 5; 
+  reserved 6 to 8;
+}
+
+message IngestResponse {
+  bool success = 1;
+}
