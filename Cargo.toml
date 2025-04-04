@@ -2,7 +2,7 @@
 members = [
   "apps/ingester",
   "apps/generator",
-  "packages/rust-deps"
+  "packages/proto"
 ]
 
 [workspace.dependencies]
