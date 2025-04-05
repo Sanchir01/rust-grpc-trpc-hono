@@ -1,11 +1,16 @@
 [workspace]
+resolver = "3"
 members = [
   "apps/ingester",
   "apps/generator",
-  "packages/proto"
+  "packages/rust-deps/proto"
 ]
 
 [workspace.dependencies]
 tonic = "0.13.0"
 prost = "0.13.5"
-tokio = { version = "1.44", features = ["full"] }
+tokio = { version = "1.44.2", features = ["full"] }
+prost-types = "0.13.5"
+tonic-build = "0.13.0"
+clickhouse = "0.13.2"
+serde = { version = "1.0.219", features = ["derive"] }

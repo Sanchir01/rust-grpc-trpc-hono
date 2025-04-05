@@ -13,7 +13,6 @@ services:
       POSTGRES_DB: rust
     volumes:
       - pg_data:/var/lib/postgresql/data
-
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     container_name: clickhouse
@@ -31,3 +30,4 @@ services:
 volumes:
   pg_data:
   ch_data:
+  sqlite:

@@ -1,5 +1,5 @@
 [package]
-name = "ingester"
+name = "proto"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,4 +7,7 @@ edition = "2024"
 tonic.workspace = true
 prost.workspace = true
 tokio.workspace = true
-proto = { path = "../../packages/rust-deps/proto" }
+prost-types.workspace = true
+
+[build-dependencies]
+tonic-build.workspace = true

@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package ingester;
+package posts;
 
 import "google/protobuf/timestamp.proto";
 
 service PostIngestService {
-  rpc IngestPost(PostRequest) returns (IngestResponse);
+  rpc IngestPost(PostRequest) returns (PostResponse);
 }
 
 message PostRequest {
@@ -21,6 +21,6 @@ message Post {
   reserved 6 to 8;
 }
 
-message IngestResponse {
+message PostResponse {
   bool success = 1;
 }
