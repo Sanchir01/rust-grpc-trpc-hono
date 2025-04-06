@@ -1,54 +1,64 @@
-use tonic::{transport::Server, Request, Response, Status};
-use proto::posts::{
-
-    post_ingest_service_server::{PostIngestService, PostIngestServiceServer}, 
-    PostRequest, 
-    PostResponse, 
-    Post, 
+use app::{
+    config::Config, db::init_db, handlers::Handlers, repositories::Repositories, services::Services,
 };
+use clickhouse::Client;
+use dotenvy::dotenv;
+use feature::post::handler::MyIngesterHandlers;
+use server::grpc::servergrpc::init_grpc_server;
+use std::{error::Error, net::SocketAddr, sync::Arc};
+mod app;
+mod feature;
+mod server;
+#[cfg(not(target_os = "windows"))]
+use jemallocator::Jemalloc as GlobalAlloc;
 
-#[derive(Default)]
-pub struct MyIngesterService {} 
+#[cfg(target_os = "windows")]
+use mimalloc::MiMalloc as GlobalAlloc;
 
-#[tonic::async_trait]
-impl PostIngestService for MyIngesterService {
-    async fn ingest_post(
-        &self,
-        request: Request<PostRequest>, 
-    ) -> Result<Response<PostResponse>, Status> { 
-        println!("Получен запрос IngestPost: {:?}", request);
-
-     
-        let post_request = request.into_inner();
-       
-        if let Some(post_data) = post_request.post {
-             println!("Данные поста: chat_id={}, message_id={}, text='{}'",
-                 post_data.chat_id,
-                 post_data.message_id,
-                 post_data.text);
-
-             
-             let response = proto::posts::PostResponse { success: true };
-             Ok(Response::new(response))
-        } else {
-            println!("Ошибка: поле 'post' отсутствует в запросе");
-            Err(Status::invalid_argument("Поле 'post' отсутствует в запросе"))
-            
-        }
-    }
-}
+#[global_allocator]
+static GLOBAL: GlobalAlloc = GlobalAlloc;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse()?;
-    let ingester_service = MyIngesterService::default(); // Используем новое имя
+    dotenv().ok().expect("Could not load .env file");
+    let config = Config::new().await;
+    //todo:delete to prod
+    println!("Config: {:?}", config);
 
-    println!("Сервер Ingester запущен на {}", addr);
+    let client = init_db(&config).await?;
 
-    Server::builder()
-        .add_service(PostIngestServiceServer::new(ingester_service))
-        .serve(addr)
-        .await?;
+    run_migrations(&client).await?;
 
+    let repo = Arc::new(Repositories::new_repositories(client));
+    let in_memory_services = Arc::new(Services::new_services(repo));
+    let handlers = Arc::new(Handlers::new_handlers(in_memory_services));
+
+    let _ = init_grpc_server(config, handlers.post_handler.clone()).await?;
     Ok(())
+}
+
+async fn run_migrations(client: &Client) -> Result<(), Box<dyn Error>> {
+    println!("Attempting to connect and run migrations...");
+
+    let create_table_sql = r#"
+        CREATE TABLE IF NOT EXISTS posts (
+            chat_id Int64,
+            message_id UInt32,
+            timestamp DateTime64(3, 'UTC'),
+            post_timestamp DateTime64(3, 'UTC'),
+            text String
+        ) ENGINE = MergeTree()
+        ORDER BY (chat_id, message_id, timestamp);
+    "#;
+
+    match client.query(create_table_sql).execute().await {
+        Ok(_) => {
+            println!("Migrations executed successfully.");
+            Ok(())
+        }
+        Err(e) => {
+            eprintln!("Error executing migration query: {}", e);
+            Err(Box::new(e))
+        }
+    }
 }

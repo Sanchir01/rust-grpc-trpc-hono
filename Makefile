@@ -39,8 +39,11 @@ migrations-status-pg:
 
 migrations-status-clickhouse:
 	goose -dir $(DIR_CLICKHOUSE) clickhouse  $(CLICKHOUSE_DSN) status
+
 migrations-new-clickhouse:
-	goose -dir $(DIR_CLICKHOUSE) create $(MIGRATION_NAME) sql
+	goose -dir migrations/clickhouse clickhouse "tcp://localhost:9000?db=default&username=default" up
 
 migrations-new-pg:
 	goose -dir $(DIR_PG) create $(MIGRATION_NAME) sql
+
+

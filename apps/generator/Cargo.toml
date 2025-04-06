@@ -7,5 +7,7 @@ edition = "2024"
 tonic.workspace = true
 prost.workspace = true
 tokio.workspace = true
-clickhouse.workspace = true
+mimalloc.workspace = true
 
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+jemallocator.workspace = true
