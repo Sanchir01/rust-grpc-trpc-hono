@@ -44,8 +44,8 @@ async fn run_migrations(client: &Client) -> Result<(), Box<dyn Error>> {
         CREATE TABLE IF NOT EXISTS posts (
             chat_id Int64,
             message_id UInt32,
-            timestamp DateTime64(3, 'UTC'),
-            post_timestamp DateTime64(3, 'UTC'),
+            timestamp DateTime64(6, 'UTC'),
+            post_timestamp DateTime64(6, 'UTC'),
             text String
         ) ENGINE = MergeTree()
         ORDER BY (chat_id, message_id, timestamp);

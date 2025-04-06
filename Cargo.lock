@@ -740,6 +740,7 @@ dependencies = [
  "jemallocator",
  "mimalloc",
  "prost",
+ "prost-types",
  "proto",
  "regex",
  "serde",

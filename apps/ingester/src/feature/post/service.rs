@@ -1,12 +1,14 @@
-use std::sync::Arc;
-
+use crate::feature::post::{entity::PostStruct, repository::PostRepositoryTrait};
+use chrono::{DateTime, Utc};
+use prost_types::Timestamp;
 use proto::posts::{PostRequest, PostResponse};
+use std::sync::Arc;
 use tonic::{Request, Response, Status};
 
 use super::repository::PostRepository;
 
 pub struct PostService {
-    post_service: Arc<PostRepository>,
+    post_repo: Arc<PostRepository>,
 }
 
 #[tonic::async_trait]
@@ -18,8 +20,8 @@ pub trait PostServiceTrait {
 }
 
 impl PostService {
-    pub fn new_post_services(post_service: Arc<PostRepository>) -> Self {
-        Self { post_service }
+    pub fn new_post_repos(post_repo: Arc<PostRepository>) -> Self {
+        Self { post_repo }
     }
 }
 #[tonic::async_trait]
@@ -28,21 +30,30 @@ impl PostServiceTrait for PostService {
         &self,
         request: Request<PostRequest>,
     ) -> Result<Response<PostResponse>, Status> {
-        println!("Получен запрос IngestPost: {:?}", request);
         let post_request = request.into_inner();
-        if let Some(post_data) = post_request.post {
-            println!(
-                "Данные поста: chat_id={}, message_id={}, text='{}'",
-                post_data.chat_id, post_data.message_id, post_data.text
-            );
 
-            let response = proto::posts::PostResponse { success: true };
-            Ok(Response::new(response))
-        } else {
-            println!("Ошибка: поле 'post' отсутствует в запросе");
-            Err(Status::invalid_argument(
-                "Поле 'post' отсутствует в запросе",
-            ))
+        let post_data = match post_request.post {
+            Some(data) => data,
+            None => {
+                println!("Ошибка: поле 'post' отсутствует в запросе");
+                return Err(Status::invalid_argument(
+                    "Поле 'post' отсутствует в запросе",
+                ));
+            }
+        };
+
+        let post_struct = PostStruct::from(post_data);
+
+        let result = self.post_repo.create_post(post_struct).await;
+
+        if let Err(e) = result {
+            return Err(Status::internal(format!(
+                "Ошибка при создании поста: {}",
+                e
+            )));
         }
+
+        let response = proto::posts::PostResponse { success: true };
+        Ok(Response::new(response))
     }
 }

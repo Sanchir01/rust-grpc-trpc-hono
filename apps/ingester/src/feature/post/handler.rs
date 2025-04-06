@@ -21,8 +21,6 @@ impl PostIngestService for MyIngesterHandlers {
         &self,
         request: Request<PostRequest>,
     ) -> Result<Response<PostResponse>, Status> {
-        println!("gRPC Handler received IngestPost request: {:?}", request);
-
         self.post_service.ingest_post(request).await
     }
 }

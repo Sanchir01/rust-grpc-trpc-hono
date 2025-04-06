@@ -12,9 +12,10 @@ chrono.workspace = true
 regex.workspace = true
 toml.workspace = true
 mimalloc.workspace = true
-serde.workspace =true
-dotenvy.workspace =true
+serde.workspace = true
+dotenvy.workspace = true
 proto = { path = "../../packages/rust-deps/proto" }
+prost-types.workspace = true
 
 [target.'cfg(not(target_os = "windows"))'.dependencies]
 jemallocator.workspace = true

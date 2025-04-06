@@ -12,7 +12,7 @@ pub struct Services {
 impl Services {
     pub fn new_services(repositories: Arc<Repositories>) -> Self {
         Self {
-            post_service: Arc::new(PostService::new_post_services(
+            post_service: Arc::new(PostService::new_post_repos(
                 repositories.post_repository.clone(),
             )),
         }
