@@ -39,22 +39,39 @@ services:
     depends_on:
       - postgres
 
-  rust-workspace:
+  ingester:
     build:
       context: .
-      dockerfile: .
-    container_name: rust-workspace
+      dockerfile: Dockerfile
+      target: ingester
+    container_name: ingester
     restart: always
     ports:
       - "50051:50051"
     environment:
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/rust
-      - PORT=3000
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-test}
+      - DATABASE_URL=tcp://clickhouse:9000?database=default&username=default&password=${CLICKHOUSE_PASSWORD:-test}
     depends_on:
       - postgres
+      - clickhouse
+
+  generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: generator
+    container_name: generator
+    restart: always
+    environment:
+      - INGESTER_URL=http://ingester:50051
+      - NUM_THREADS=4
+    depends_on:
+      - ingester
 
 volumes:
   pg_data:
   clickhouse:
   ts-api:
-  rust-workspace:
+  ingester:
+  generator:
