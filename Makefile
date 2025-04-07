@@ -24,7 +24,7 @@ POSTGRES_DB := postgres
 POSTGRES_DSN := "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)"
 
 compose:
-	docker-compose up
+	docker-compose up -d
 dockerfile:
 	docker build -t trpc-rust-grpc .
 
@@ -36,7 +36,7 @@ generator:
 run-prod:
 	cargo run --release -p ingester &  cargo run --release -p generator
 
-rust:
+workspace:
 	cargo watch -x 'run -p generator' & cargo watch -x 'run -p ingester'
 	
 migrations-up-pg:

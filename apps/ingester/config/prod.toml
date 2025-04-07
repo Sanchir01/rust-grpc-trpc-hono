@@ -1,15 +1,14 @@
 [database]
 username = "default"
-host = "localhost"
+host = "clickhouse"
 port = 8123
 database = "default"
 
-
 [logger]
-level = "debug"
-pretty = true
+level = "info"
+pretty = false
 
 
 [grpc_server]
 port = 50051
-host = "127.0.0.1"
+host = "0.0.0.0"
