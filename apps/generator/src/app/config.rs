@@ -10,7 +10,7 @@ pub struct GRPClientConfig {
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    pub grpc_server: Option<GRPCServerConfig>,
+    pub grpc_server: Option<GRPClientConfig>,
 }
 
 impl Config {
@@ -34,7 +34,7 @@ impl Config {
         })
     }
 
-    pub fn get_grpc_config(&self) -> Option<&GRPCServerConfig> {
+    pub fn get_grpc_config(&self) -> Option<&GRPClientConfig> {
         self.grpc_server.as_ref()
     }
 }

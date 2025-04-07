@@ -9,6 +9,10 @@ prost.workspace = true
 tokio.workspace = true
 mimalloc.workspace = true
 proto = { path = "../../packages/rust-deps/proto" }
-
+toml.workspace = true
+serde.workspace = true
+fake.workspace =true
+prost-types.workspace =true
+chrono.workspace =true
 [target.'cfg(not(target_os = "windows"))'.dependencies]
 jemallocator.workspace = true
