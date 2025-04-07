@@ -2,10 +2,7 @@ use app::config::Config;
 use proto::posts::{Post, PostRequest, post_ingest_service_client::PostIngestServiceClient};
 mod app;
 use chrono::Utc;
-use fake::{
-    Fake,
-    faker::{lorem::en::Sentence, number::en::Digit},
-};
+use fake::{Fake, faker::lorem::en::Sentence};
 #[cfg(not(target_os = "windows"))]
 use jemallocator::Jemalloc as GlobalAlloc;
 use prost_types::Timestamp;
