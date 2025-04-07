@@ -6,7 +6,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     tonic_build::configure()
         .file_descriptor_set_path(file_descriptor_path)
         .build_server(true)
-        .out_dir(out_dir)
+        .out_dir("./")
         .compile_protos(&["./posts.proto"], &["./"])?;
 
     tonic_build::compile_protos("./posts.proto")?;

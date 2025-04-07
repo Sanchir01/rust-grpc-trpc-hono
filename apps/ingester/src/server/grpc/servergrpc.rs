@@ -4,7 +4,7 @@ use proto::posts::{
     PostRequest, PostResponse,
     post_ingest_service_server::{PostIngestService, PostIngestServiceServer},
 };
-use std::{ error::Error as StdError, net::SocketAddr,  sync::Arc};
+use std::{error::Error as StdError, net::SocketAddr, sync::Arc};
 use tonic::{Request, Response, Status, transport::Server};
 struct ArcWrapper(Arc<MyIngesterHandlers>);
 

@@ -8,6 +8,7 @@ use std::{error::Error, sync::Arc};
 mod app;
 mod feature;
 mod server;
+
 #[cfg(not(target_os = "windows"))]
 use jemallocator::Jemalloc as GlobalAlloc;
 

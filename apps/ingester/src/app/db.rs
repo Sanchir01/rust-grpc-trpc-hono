@@ -18,14 +18,12 @@ pub async fn init_db(config: &Config) -> Result<Client, Box<dyn std::error::Erro
 
     println!("Connecting to ClickHouse at: {}", addr);
 
-    
     let client = Client::default()
         .with_url(&addr)
         .with_user(&clickhouse_config.username)
         .with_password(password)
         .with_database(&clickhouse_config.database);
 
-   
     match client.query("SELECT 1").execute().await {
         Ok(_) => println!("Successfully connected to ClickHouse!"),
         Err(e) => println!(
