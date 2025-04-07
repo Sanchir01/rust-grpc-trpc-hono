@@ -17,10 +17,10 @@ impl Config {
     pub async fn new() -> Self {
         let config_path = if cfg!(debug_assertions) {
             println!("Dev mode");
-            "apps/ingester/config/dev.toml"
+            "apps/generator/config/dev.toml"
         } else {
             println!("Prod mode");
-            "apps/ingester/config/prod.toml"
+            "apps/generator/config/prod.toml"
         };
 
         let content = fs::read_to_string(config_path).await.unwrap_or_else(|err| {
