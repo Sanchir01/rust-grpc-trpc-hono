@@ -1,7 +1,5 @@
 use crate::feature::post::service::{PostService, PostServiceTrait};
-use proto::posts::{
-    Post, PostRequest, PostResponse, post_ingest_service_server::PostIngestService,
-};
+use proto::posts::{PostRequest, PostResponse, post_ingest_service_server::PostIngestService};
 use std::sync::Arc;
 use tonic::{Request, Response, Status};
 

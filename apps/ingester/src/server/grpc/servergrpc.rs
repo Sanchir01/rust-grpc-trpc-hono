@@ -4,7 +4,7 @@ use proto::posts::{
     PostRequest, PostResponse,
     post_ingest_service_server::{PostIngestService, PostIngestServiceServer},
 };
-use std::{error::Error as StdError, net::SocketAddr, sync::Arc};
+use std::{ error::Error as StdError, net::SocketAddr,  sync::Arc};
 use tonic::{Request, Response, Status, transport::Server};
 struct ArcWrapper(Arc<MyIngesterHandlers>);
 
@@ -27,7 +27,13 @@ pub async fn init_grpc_server(
 
     let addr = format!("{}:{}", rpc_config.host, rpc_config.port).parse::<SocketAddr>()?;
     println!("gRPC Server listening on: {}", addr);
+
+    let service = tonic_reflection::server::Builder::configure()
+        .register_encoded_file_descriptor_set(proto::posts::FILE_DESCRIPTOR_SET)
+        .build_v1()?;
+
     Server::builder()
+        .add_service(service)
         .add_service(PostIngestServiceServer::new(ArcWrapper(ingester_handler)))
         .serve(addr)
         .await?;

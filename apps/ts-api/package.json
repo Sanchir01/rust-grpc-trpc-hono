@@ -1,14 +1,26 @@
 {
-  "name": "ts-api",
-  "scripts": {
-    "dev": "bun run --hot src/index.ts"
-  },
-  "dependencies": {
-    "@hono/trpc-server": "^0.3.4",
-    "@trpc/server": "^11.0.2",
-    "hono": "^4.7.5"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  }
+	"name": "ts-api",
+	"scripts": {
+		"dev": "bun run --hot src/index.ts",
+		"format": "bun run prettier --write .",
+		"build": "bun build src/index.ts --outdir ./dist --target node",
+		"prepare": "husky",
+		"prod": "bun run dist/index.js"
+	},
+	"dependencies": {
+		"@hono/trpc-server": "^0.3.4",
+		"@trpc/server": "^11.0.2",
+		"dotenv": "^16.4.7",
+		"drizzle-orm": "^0.41.0",
+		"hono": "^4.7.5",
+		"postgres": "^3.4.5",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"@types/pg": "^8.11.11",
+		"drizzle-kit": "^0.30.6",
+		"husky": "^9.1.7",
+		"prettier": "^3.5.3"
+	}
 }

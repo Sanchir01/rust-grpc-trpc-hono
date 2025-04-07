@@ -3,7 +3,7 @@ resolver = "2"
 members = ["apps/ingester", "apps/generator", "packages/rust-deps/proto"]
 
 [workspace.dependencies]
-tonic = "0.13.0"
+tonic = { version = "0.13.0", features = ["transport"] }
 prost = "0.13.5"
 tokio = { version = "1.44.2", features = ["full"] }
 prost-types = "0.13.5"
@@ -17,3 +17,4 @@ mimalloc = { version = "0.1.45" }
 jemallocator = { version = "0.5.4" }
 fake = { version = "4.2.0", features = ["derive", "chrono"] }
 dotenvy = "0.15.7"
+tonic-reflection = "0.13.0"

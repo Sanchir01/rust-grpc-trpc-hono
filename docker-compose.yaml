@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: rust
+      POSTGRES_DB: postgres
     volumes:
       - pg_data:/var/lib/postgresql/data
   clickhouse:
@@ -25,7 +25,36 @@ services:
       - CLICKHOUSE_USER=default
       - CLICKHOUSE_PASSWORD=test
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+  ts-api:
+    build:
+      context: .
+      dockerfile: apps/ts-api/Dockerfile
+    container_name: ts-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/rust
+      - PORT=3000
+    depends_on:
+      - postgres
+
+  rust-workspace:
+    build:
+      context: .
+      dockerfile: .
+    container_name: rust-workspace
+    restart: always
+    ports:
+      - "50051:50051"
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/rust
+      - PORT=3000
+    depends_on:
+      - postgres
 
 volumes:
   pg_data:
   clickhouse:
+  ts-api:
+  rust-workspace:

@@ -16,6 +16,7 @@ serde.workspace = true
 dotenvy.workspace = true
 proto = { path = "../../packages/rust-deps/proto" }
 prost-types.workspace = true
+tonic-reflection.workspace = true
 
 [target.'cfg(not(target_os = "windows"))'.dependencies]
 jemallocator.workspace = true

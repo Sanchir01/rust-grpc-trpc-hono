@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::feature::post::{repository::PostRepository, service::PostService};
+use crate::feature::post::service::PostService;
 
 use super::repositories::Repositories;
 

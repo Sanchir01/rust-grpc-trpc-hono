@@ -3,9 +3,8 @@ use app::{
 };
 use clickhouse::Client;
 use dotenvy::dotenv;
-use feature::post::handler::MyIngesterHandlers;
 use server::grpc::servergrpc::init_grpc_server;
-use std::{error::Error, net::SocketAddr, sync::Arc};
+use std::{error::Error, sync::Arc};
 mod app;
 mod feature;
 mod server;
@@ -22,7 +21,7 @@ static GLOBAL: GlobalAlloc = GlobalAlloc;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok().expect("Could not load .env file");
     let config = Config::new().await;
-    //todo:delete to prod
+    //todo:delete for prod
     println!("Config: {:?}", config);
 
     let client = init_db(&config).await?;

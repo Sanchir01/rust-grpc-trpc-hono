@@ -28,7 +28,7 @@ impl Config {
             "apps/ingester/config/dev.toml"
         } else {
             println!("Prod mode");
-            "apps/generator/config/prod.toml"
+            "apps/ingester/config/prod.toml"
         };
 
         let content = fs::read_to_string(config_path).await.unwrap_or_else(|err| {

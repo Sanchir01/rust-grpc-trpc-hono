@@ -1,6 +1,5 @@
 use crate::feature::post::{entity::PostStruct, repository::PostRepositoryTrait};
-use chrono::{DateTime, Utc};
-use prost_types::Timestamp;
+
 use proto::posts::{PostRequest, PostResponse};
 use std::sync::Arc;
 use tonic::{Request, Response, Status};
@@ -43,7 +42,10 @@ impl PostServiceTrait for PostService {
         };
 
         let post_struct = PostStruct::from(post_data);
-
+        if post_struct.text.len() > 500 {
+            println!("Ошибка: текст поста слишком длинный");
+            return Err(Status::invalid_argument("Текст поста слишком длинный"));
+        }
         let result = self.post_repo.create_post(post_struct).await;
 
         if let Err(e) = result {
